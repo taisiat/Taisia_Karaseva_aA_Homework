@@ -25,19 +25,18 @@ class Board
   end
 
   def make_move(start_pos, current_player_name)
-    valid_move?(start_pos)
-    stone_count = @cups[start_pos].length
-    stone_count.times do
-      @cups[start_pos].pop
-    end
+    stones = @cups[start_pos]
+    @cups[start_pos] = []
     current_pos = start_pos
-    until stone_count == 0
+    until stones.empty?
       current_pos = (current_pos + 1) % 14
-      # cup_to_skip = (current_player_name == @name1 ? 6 : 13 )
-      # if current_pos != cup_to_skip
-        @cups[current_pos] << :stone 
-      # end
-      stone_count -= 1
+      if current_pos == 6
+        @cups[6] << stones.pop if current_player_name == @name1
+      elsif current_pos == 13
+        @cups[13] << stones.pop if current_player_name == @name2
+      elsif current_pos != 13 && current_pos != 6
+        @cups[current_pos] << stones.pop 
+      end
     end
     render
     next_turn(current_pos)
@@ -45,14 +44,15 @@ class Board
   end
 
   def next_turn(ending_cup_idx)
-    # if @cups[ending_cup_idx].length == 0
-    #   :switch
-    # elsif ending_cup_idx == (current_player_name == @name1 ? 6.to_i : 13.to_i )
-    #   :prompt
-    # else
-    #   make_move(ending_cup_idx, current_player_name)
-    # end
-
+    if ending_cup_idx == 6 || ending_cup_idx == 13
+      :prompt
+      
+    elsif @cups[ending_cup_idx].length == 1
+      :switch
+    else
+      ending_cup_idx
+    end
+    
   end
 
   def render
