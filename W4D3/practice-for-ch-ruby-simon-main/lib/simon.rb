@@ -19,7 +19,6 @@ class Simon
 
   def take_turn
       self.show_sequence
-      sleep(3)
       system("clear")
       self.require_sequence
     if self.game_over == false
@@ -30,7 +29,13 @@ class Simon
 
   def show_sequence
     puts "Simon says:"
-    p self.add_random_color
+    self.add_random_color
+    @seq.each do |color|
+      sleep(0.5)
+      puts color
+      sleep(1)
+      system("clear")
+    end
   end
 
   def require_sequence
@@ -50,7 +55,7 @@ class Simon
   end
 
   def game_over_message
-    puts "Game is over! Defeat :("
+    puts "Game is over! Defeat after #{sequence_length - 1} rounds :("
   end
 
   def reset_game
